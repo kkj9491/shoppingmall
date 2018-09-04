@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.study.dao.HRDShopDao;
+import org.study.model.Member;
 
 /**
  * Servlet implementation class RegisterServlet
@@ -40,6 +41,7 @@ public class RegisterServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		Member member = new Member();
 		
 	}
 
