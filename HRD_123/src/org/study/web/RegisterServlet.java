@@ -1,6 +1,9 @@
 package org.study.web;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,12 +23,18 @@ public class RegisterServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("register doget called...");
 		
-		int nextMemberId = 
-		
-		request.getRequestDispatcher("/WEB-INF/views/registerForm.jsp").forward(request, response);
-		
+		try {
+			int nextMemberId = dao.getNextMemberId();
+			request.setAttribute("id", nextMemberId);
+			Date date = new Date(System.currentTimeMillis());
+			DateFormat format = new SimpleDateFormat("yyyyMMdd");
+			request.setAttribute("today", format.format(date));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		request.getRequestDispatcher("/WEB-INF/views/registerForm.jsp").forward(request, response);		
 	}
 
 	
