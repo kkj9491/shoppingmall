@@ -65,6 +65,26 @@ public class RegisterServlet extends HttpServlet {
 		}
 		
 		member.setMember_title(request.getParameter("member_title"));
+		member.setMember_city(request.getParameter("member_city"));
+		
+		//System.out.println(member);
+		
+		try {
+			if (dao != null) {
+				if(dao.insertMember(member)) {
+					System.out.println("database update success");
+					
+					return;
+				} else {
+					System.out.println("database update fail");
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				}
+			}
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		
+		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 	}
 
 }

@@ -33,6 +33,55 @@
     			<td>도시코드</td>
     			<td><input type="text" name="member_city"></td>
     		</tr>
+    			<td colspan="2">
+    				<button id="reg_button" type="button" onclick="register()">등록</button>
+    				<button id="list_button" type="button" onclick="list()">조회</button>    			
+    			</td>    		
     	</table>
     
     </section>
+    
+    <script>
+    	var request;    	
+    	
+    	function register() {
+    		console.log("register called.");
+    		
+    		if (name_validate() === false) {
+    			return;
+    		}   
+    		
+    		var forObj = document.getElementById("reg_form");
+    		var elem = formObj.elements;
+    		var params = "";
+    		
+    		for(var i = 0; i < elem.length; i++) {
+    			if(elem[i].tagName == "SELECT") {
+    				value = elem[i].options[elem[i].selectedIndex].value;    				
+    			} else {
+    				value = elem[i].value;
+    			}
+    			
+    			params += elem[i].name + "=" + encodeURIComponent(value) + "&";
+    		}
+    		
+    		console.log(params);
+    		
+    		request = new XMLHttpRequest();
+    		var url = "${pageContext.request.contextPath}/register"
+    		
+    		try {
+    			request.onreadystatechange = getResult;
+    			request.open("POST", url, true);
+    			request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    			request.setRequestHeader("Content-length", params.length);
+    			request.send(params);
+    		} catch (e) {
+    			alert("서버요청이 실패")    			
+    		}
+    	}
+    	
+    	function 
+    
+    
+    </script>

@@ -130,6 +130,14 @@ public class HRDShopDao {
 		
 		return list;
 	}
+
+	public void authenticateUser(Integer id, String pw) throws Exception {
+		Connection conn = getConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String name = null;
+		
+	}
 	
 	
 	
