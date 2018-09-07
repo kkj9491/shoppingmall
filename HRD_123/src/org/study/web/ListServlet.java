@@ -21,8 +21,7 @@ public class ListServlet extends HttpServlet {
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HRDShopDao dao = new HRDShopDao();
-		
-		
+				
 		try {
 			List<Member> list = dao.listMember();
 			request.setAttribute("list", list);
@@ -31,6 +30,7 @@ public class ListServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
+		request.getRequestDispatcher("/WEB-INF/views/list.jsp").forward(request, response);
 	}
 	
 

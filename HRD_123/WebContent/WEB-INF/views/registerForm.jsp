@@ -81,7 +81,34 @@
     		}
     	}
     	
-    	function 
+    	function getResult() {
+    		if(request.readyState == 4) {
+    			var result = request.responseText;
+    			
+    			if(request.status === 200){
+    				alert("회원등록이 완료되었습니다");
+    			} else {
+    				console.log(request.status);
+    				alert("회원등록이 실패하였습니다");
+    			}
+    		}
+    	}
+    	
+    	function list() {
+    		console.log("list called.");
+    		var doc_root = "${pageContext.request.contextPath}";
+    		location.href = doc_root + "/list";
+    	}
+    	
+    	function name_validate() {
+    		var input_name = document.getElementById("mem_name");
+    		
+    		if (input_name.value === ""){
+    			alert("회원성명이 입력되지 않았음")
+    			return false;
+    		}
+    		return true;
+    	}
     
     
     </script>

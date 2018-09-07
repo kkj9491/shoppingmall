@@ -27,11 +27,12 @@ public class LoginFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest)arg0;
 		HttpServletResponse response = (HttpServletResponse)arg1;
+		
 		String path = request.getRequestURI();
 		String docRoot = request.getContextPath();
 		System.out.println();
 		
-		if(path.matches(".*(css|js|jpeg|jpg)")) {
+		if(path.matches(".*(css|js)")) {
 			arg2.doFilter(arg0, arg1);
 			return;
 		}
@@ -51,8 +52,10 @@ public class LoginFilter implements Filter {
 		if (name != null) { // already logged in
 			arg2.doFilter(request, response);			
 		} else {
-			
-			
+			if (request.getQueryString() != null) {
+				path = path + "?" + request.getQueryString();
+			}
+			request.setAttribute("orgReqPath", path);
 			request.setAttribute("error", "먼저로그인하세요");
 			request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
 		}
