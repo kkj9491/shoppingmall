@@ -131,12 +131,37 @@ public class HRDShopDao {
 		return list;
 	}
 
-	public void authenticateUser(Integer id, String pw) throws Exception {
+	public String authenticateUser(Integer id, String pw) throws Exception {
 		Connection conn = getConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		String name = null;
 		
+		if (conn != null && id != null && pw != null) {
+			String sql = "select custname from member_tbl_02" +
+							"where custno=? and pw=?";
+			
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+			ps.setString(2, pw);
+			rs = ps.executeQuery();
+			
+			if (rs.next()) {
+				name = rs.getString(1);
+			}
+			
+			if (ps != null) {
+				ps.close();
+			}
+			
+			if (rs != null) {
+				rs.close();
+			}
+			
+			conn.close();
+		}
+		
+		return name;
 	}
 	
 	
