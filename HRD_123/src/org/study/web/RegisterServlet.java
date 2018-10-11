@@ -44,11 +44,13 @@ public class RegisterServlet extends HttpServlet {
 	// AJAX call
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("register dopost called...");		
 		
 		Member member = new Member();
 		member.setMember_num(Integer.parseInt(request.getParameter("member_num")));
 		member.setMember_name(URLDecoder.decode(
 							new String(request.getParameter("member_name").getBytes("iso-8859-1")), "UTF-8"));
+		member.setMember_pw(request.getParameter("member_pw1"));
 		member.setMember_phone(request.getParameter("member_phone"));
 		member.setMember_address(URLDecoder.decode(
 							new String(request.getParameter("member_address").getBytes("iso-8859-1")), "UTF-8"));

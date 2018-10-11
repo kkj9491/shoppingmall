@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.study.dao.HRDShopDao;
 
@@ -26,6 +27,8 @@ public class LoginServlet extends HttpServlet {
     	String pw = request.getParameter("pw");
     	String orgPath = request.getParameter("orgReqPath");
     	
+		System.out.println("login(): Request--> " + request.getRequestURI());
+		System.out.println("login() orgPath--> " + orgPath);    	    	
     	HRDShopDao dao = new HRDShopDao();
     	String name = null;
     	
@@ -36,7 +39,19 @@ public class LoginServlet extends HttpServlet {
 			e.printStackTrace();
 		}
     	
-    	
+    	if(name != null) {
+    		HttpSession session = request.getSession();
+    		session.setAttribute("user", name);
+    		
+    		if(orgPath.length() == 0) {
+    			response.sendRedirect(request.getContextPath()+"/");
+    		} else {
+    			response.sendRedirect(orgPath);
+    		}
+    	} else {
+    		request.setAttribute("error", "주어진 정보가 맞지 않습니다.");
+    		request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+    	}
     	
 	}
 

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.study.dao.HRDShopDao;
+import org.study.model.Member;
 
 /**
  * Servlet implementation class UpdateServlet
@@ -22,14 +23,20 @@ public class UpdateServlet extends HttpServlet {
 		
 		Integer id = Integer.parseInt(request.getParameter("id"));
 		
+		try {
+			Member member = dao.getMemberInfor(id);
+			request.setAttribute("member", member);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		request.getRequestDispatcher("WEB-INF/views/updateForm.jsp").forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		Member member = new Member();		
+		member.setMember_num(Integer.parseInt(request.getParameter("member_num")));
 	}
 
 }

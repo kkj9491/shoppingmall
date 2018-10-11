@@ -8,11 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.study.model.Member;
+import org.study.model.SaleRecord;
 
 public class HRDShopDao {
 
 	public static Connection getConnection() throws Exception {
-		Class.forName("oracle.jdb.OracleDriver");
+		Class.forName("oracle.jdbc.OracleDriver");
 		Connection con = DriverManager.getConnection("jdbc:oracle:thin@//localhost:1521/xe", "sys as sysdb", "1111");
 		return con;		
 	}
@@ -130,6 +131,119 @@ public class HRDShopDao {
 		
 		return list;
 	}
+	
+	public List<SaleRecord> getSaleList() throws Exception{
+		Connection conn = getConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		List<SaleRecord> list = null;
+		
+		if(conn != null) {
+			String sql =  "select MONEY_TBL_02.custno, CUSTNAME, grade, sum(price) as total " + 
+					"from MONEY_TBL_02 INNER JOIN MEMBER_TBL_02 " + 
+					"on MONEY_TBL_02.custno = MEMBER_TBL_02.CUSTNO " + 
+					"group by MONEY_TBL_02.custno, CUSTNAME, grade " + 
+					"order by total desc";
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			
+			list = new ArrayList<> ();
+			
+			while(rs.next()) {
+				SaleRecord sale = new SaleRecord();
+				sale.setMember_num(rs.getInt(1));
+				sale.setMember_name(rs.getString(2));
+				sale.setMember_title(rs.getString(3));
+				sale.setSale_total(rs.getInt(4));
+				
+				list.add(sale);
+			}
+			
+			if(ps != null) {
+				ps.close();
+			}
+			
+			if(rs != null) {
+				rs.close();				
+			}
+			
+			conn.close();
+		}
+		
+		return list;
+	}
+	
+	public Member getMemberInfor(Integer id) throws Exception {
+		Connection conn = getConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Member member = null;
+		
+		if(conn != null) {
+			String sql = "select * from MEMBER_TBL_02 where CUSTNO=?";
+			
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1,  id);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				member = new Member();
+				member.setMember_num(rs.getInt(1));
+				member.setMember_name(rs.getString(2));
+				member.setMember_phone(rs.getString(3));
+				member.setMember_address(rs.getString(4));
+				member.setMember_join_date(rs.getDate(5));
+				member.setMember_title(rs.getString(6));
+				member.setMember_city(rs.getString(7));				
+			}
+			
+			if (ps != null) {
+				ps.close();
+			}
+			
+			if(rs != null) {
+				rs.close();
+			}
+			
+			conn.close();
+		}		
+	
+	return member;
+	}
+	
+	public boolean updateMember(Member member) throws Exception{
+		Connection conn = getConnection();
+		PreparedStatement ps = null;
+		int result = 0;
+		
+		if(conn != null && member != null) {
+			String sql ="update member_tbl_02 set custname=?, phone=?, address=?, " +
+						"joindate=?, grade=?, city=? where custno=?";
+			
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, member.getMember_name());
+			ps.setString(2, member.getMember_phone());
+			ps.setDate(3, member.getMember_join_date());
+			ps.setString(5, member.getMember_title());
+			ps.setString(6, member.getMember_city());
+			ps.setInt(7,  member.getMember_num());
+			
+			result = ps.executeUpdate();
+			
+			if(ps != null) {
+				ps.close();
+			}
+			
+			conn.close();
+		}
+		
+		if(result > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	public String authenticateUser(Integer id, String pw) throws Exception {
 		Connection conn = getConnection();
@@ -163,7 +277,5 @@ public class HRDShopDao {
 		
 		return name;
 	}
-	
-	
 	
 }

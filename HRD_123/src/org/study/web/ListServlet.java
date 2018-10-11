@@ -25,6 +25,7 @@ public class ListServlet extends HttpServlet {
 		try {
 			List<Member> list = dao.listMember();
 			request.setAttribute("list", list);
+			//System.out.println(list);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -32,6 +33,5 @@ public class ListServlet extends HttpServlet {
 		
 		request.getRequestDispatcher("/WEB-INF/views/list.jsp").forward(request, response);
 	}
-	
 
 }

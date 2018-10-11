@@ -30,46 +30,46 @@ public class LoginFilter implements Filter {
 		
 		String path = request.getRequestURI();
 		String docRoot = request.getContextPath();
-		System.out.println();
+		System.out.println("LoginFilter: doFilter()> uri: " + path + " docRoot: " + docRoot);
+		System.out.println(path.split(docRoot)[1]);
 		
-		if(path.matches(".*(css|js)")) {
+		if (path.matches(".*(css|js)"))
+		{
 			arg2.doFilter(arg0, arg1);
 			return;
 		}
 		
-		for(String url : excludedUrls) {
+		for (String url : excludedUrls) {
 			if (url.equals(path.split(docRoot)[1])) {
 				arg2.doFilter(arg0, arg1);
 				return;
 			}
-		}
-		
-		//session validation
-		System.out.println("login needed....");
+		}		
+
 		HttpSession session = request.getSession();
 		String name = (String) session.getAttribute("user");
-		
 		if (name != null) { // already logged in
-			arg2.doFilter(request, response);			
+			arg2.doFilter(request, response);
 		} else {
-			if (request.getQueryString() != null) {
+			if (request.getQueryString() != null)
+			{
 				path = path + "?" + request.getQueryString();
 			}
 			request.setAttribute("orgReqPath", path);
-			request.setAttribute("error", "먼저로그인하세요");
-			request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
+			request.setAttribute("error", "먼저 로그인 하세요");
+			request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
 		}
 	}
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 		String params = config.getInitParameter("excluded");
-		//System.out.println("LoginFilter:param>" + params);
+		//System.out.println("LoginFilter: param> " + params);
 		excludedUrls = params.split(",");
-		for(int i = 0; i <excludedUrls.length; i++) {
+		for (int i = 0; i < excludedUrls.length; i++) {
 			excludedUrls[i] = excludedUrls[i].trim();
 		}
 		//System.out.println(Arrays.toString(excludedUrls));
 	}
-	
+
 }
